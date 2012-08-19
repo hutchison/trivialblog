@@ -14,6 +14,8 @@ requires = [
     'pyramid_debugtoolbar',
     'zope.sqlalchemy',
     'waitress',
+    'Markdown',
+    'pyramid_jinja2',
     ]
 
 setup(name='trivialblog',

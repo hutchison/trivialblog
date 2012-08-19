@@ -2,6 +2,7 @@ from sqlalchemy import (
     Column,
     Integer,
     Text,
+    Date,
     )
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -16,13 +17,14 @@ from zope.sqlalchemy import ZopeTransactionExtension
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
-class MyModel(Base):
-    __tablename__ = 'models'
+class Post(Base):
+    __tablename__ = 'posts'
     id = Column(Integer, primary_key=True)
-    name = Column(Text, unique=True)
-    value = Column(Integer)
+    headline = Column(Text)
+    content = Column(Text)
+    pdate = Column(Date)
 
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
-
+    def __init__(self, h, c, d):
+        self.headline = h
+        self.content = c
+        self.pdate = d

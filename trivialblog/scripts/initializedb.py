@@ -1,6 +1,7 @@
 import os
 import sys
 import transaction
+from datetime import date
 
 from sqlalchemy import engine_from_config
 
@@ -11,7 +12,7 @@ from pyramid.paster import (
 
 from ..models import (
     DBSession,
-    MyModel,
+    Post,
     Base,
     )
 
@@ -30,6 +31,3 @@ def main(argv=sys.argv):
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
-    with transaction.manager:
-        model = MyModel(name='one', value=1)
-        DBSession.add(model)
