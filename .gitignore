@@ -1,0 +1,5 @@
+# Alle kompilierten Python-Dateien:
+*.pyc
+
+# Die Datenbanken (zumindest eine):
+*.db
