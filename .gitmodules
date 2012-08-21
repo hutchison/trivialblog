@@ -1,0 +1,3 @@
+[submodule "trivialblog/static/bootstrap"]
+	path = trivialblog/static/bootstrap
+	url = git@github.com:hutchison/bootstrap.git
