@@ -34,8 +34,7 @@
           <a class="brand" href="{{ request.application_url }}">Trivialanalog</a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <!-- hier kommen die Menüpunkte rein -->
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -45,8 +44,9 @@
     <div class="container">
 
       {% for p in posts %}
-      <h1>{{ p['headline'] }}</h1>
-      {{ p['content']|markdown|safe }}
+      <h2>{{ p.headline }}</h2>
+      <small>{{ p.pdate.strftime("%A, %d. %B %Y") }}</small>
+      {{ p.content|markdown|safe }}
       {% endfor %}
 
     </div> <!-- /container -->
