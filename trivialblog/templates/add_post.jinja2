@@ -11,6 +11,12 @@
   <textarea class="input-xxlarge" name="text" rows=15 columns=100 placeholder="Inhalt"></textarea><br/>
   <button type="submit" class="btn btn-primary" name="form.submitted">Speichern</button>
 </form>
+<div class="accordion" id="mdhelp">
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#mdhelp" href="#mdhelptable">Markdown Hilfe</a>
+    </div>
+    <div id="mdhelptable" class="accordion-body collapse">
 <table class="table span8">
   <thead>
     <tr>
@@ -68,4 +74,7 @@ if spam == True:
       <td>benutze <code>print</code> um Dinge auszugeben</td>
   </tbody>
 </table>
+    </div>
+  </div>
+</div>
 {% endblock %}
