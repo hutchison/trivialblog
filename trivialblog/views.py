@@ -5,6 +5,8 @@ from pyramid.view import view_config
 from markdown import markdown
 from sqlalchemy import desc
 
+from datetime import date
+
 from pyramid.httpexceptions import (
     HTTPFound,
     HTTPNotFound,
@@ -32,3 +34,18 @@ def view_post(request):
             ' vorhanden.')
     else:
         return dict(p=post)
+
+@view_config(route_name='add_post', renderer='add_post.jinja2')
+def add_post(request):
+    if 'form.submitted' in request.params:
+        title = request.params['headline']
+        text = request.params['text']
+        if title == '' or text == '':
+            errmsg = 'Titel oder Inhalt waren leer.'
+            return dict(status=errmsg)
+        pdate = date.today()
+        p = Post(title, text, pdate)
+        DBSession.add(p)
+        return HTTPFound(location=request.application_url)
+    else:
+        return dict()

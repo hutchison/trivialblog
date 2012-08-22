@@ -1,0 +1,71 @@
+{% extends "basic.jinja2" %}
+{% block context %}
+{% if status %}
+<div class="alert alert-error">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  {{ status }}
+</div>
+{% endif %}
+<form action="/new" method="post">
+  <input type="text" class="input-xlarge" name="headline" placeholder="Titel"><br/>
+  <textarea class="input-xxlarge" name="text" rows=15 columns=100 placeholder="Inhalt"></textarea><br/>
+  <button type="submit" class="btn btn-primary" name="form.submitted">Speichern</button>
+</form>
+<table class="table span8">
+  <thead>
+    <tr>
+      <th>monkey type</th>
+      <th>monkey see</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>*kursiv*</td>
+      <td><em>kursiv</em></td>
+    </tr>
+    <tr>
+      <td>**fett**</td>
+      <td><strong>fett</strong></td>
+    </tr>
+    <tr>
+      <td>[link zu ta](http://trivialanalog.de)</td>
+      <td><a href="http://trivialanalog.de">link zu ta</a></td>
+    </tr>
+    <tr>
+      <td>
+        * item 1<br/>
+        * item 2<br/>
+        * item 3<br/>
+      </td>
+      <td>
+        <ul>
+          <li>item 1</li>
+          <li>item 2</li>
+          <li>item 3</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>&gt; zitierter Text</td>
+      <td>
+        <blockquote>zitierter Text</blockquote>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      <small>mit 4 Leerzeichen einrücken:</small><br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;if spam == True:<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print eggs
+      </td>
+      <td>
+        <pre>
+if spam == True:
+    print eggs</pre>
+      </td>
+    </tr>
+    <tr>
+      <td>benutze `print` um Dinge auszugeben</td>
+      <td>benutze <code>print</code> um Dinge auszugeben</td>
+  </tbody>
+</table>
+{% endblock %}
