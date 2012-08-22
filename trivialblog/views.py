@@ -1,7 +1,17 @@
+# -*- coding: utf-8 -*-
 import locale
 locale.setlocale(locale.LC_ALL, 'de_DE')
 
-from pyramid.view import view_config
+from pyramid.view import (
+        view_config,
+        forbidden_view_config,
+        )
+from pyramid.security import (
+        remember,
+        forget,
+        authenticated_userid,
+        )
+from .security import USERS
 from markdown import markdown
 from sqlalchemy import desc
 
@@ -17,14 +27,17 @@ from .models import (
     Post,
     )
 
-@view_config(route_name='home', renderer='home.jinja2')
+@view_config(route_name='home', renderer='home.jinja2', permission='view')
 def home(request):
     """Die Startseite.
         Zeigt die letzten 10 Posts an."""
     posts = DBSession.query(Post).order_by(Post.pdate.desc()).limit(10)
-    return dict(posts=posts)
+    return dict(posts=posts,
+            logged_in=authenticated_userid(request)
+            )
 
-@view_config(route_name='view_post', renderer='view_post.jinja2')
+@view_config(route_name='view_post', renderer='view_post.jinja2',
+    permission='view')
 def view_post(request):
     """Zeigt einen bestimmten Post an."""
     postid = request.matchdict['id']
@@ -33,11 +46,15 @@ def view_post(request):
         return HTTPNotFound('Kein Blogpost mit der ID ' + str(postid) +
             ' vorhanden.')
     else:
-        return dict(p=post)
+        return dict(p=post,
+                logged_in=authenticated_userid(request)
+                )
 
-@view_config(route_name='add_post', renderer='add_post.jinja2')
+@view_config(route_name='add_post', renderer='add_post.jinja2',
+    permission='edit')
+@forbidden_view_config(renderer='login.jinja2')
 def add_post(request):
-    if 'form.submitted' in request.params:
+    if 'submitting' in request.params:
         title = request.params['headline']
         text = request.params['text']
         if title == '' or text == '':
@@ -46,6 +63,32 @@ def add_post(request):
         pdate = date.today()
         p = Post(title, text, pdate)
         DBSession.add(p)
-        return HTTPFound(location=request.application_url)
+        return HTTPFound(location=request.route_url('home'))
+    elif 'rendering' in request.params:
+        title = request.params['headline']
+        text = request.params['text']
+        pdate = date.today()
+        return dict(title=title, text=text, pdate=pdate)
+    else:
+        return dict(logged_in=authenticated_userid(request))
+
+@view_config(route_name='login', renderer='login.jinja2')
+def login(request):
+    if 'submitting' in request.params:
+        login = request.params.get('login', '')
+        password = request.params.get('password', '')
+        errmsg = u'Böser Login!'
+        if USERS.get(login) == password:
+            headers = remember(request, login)
+            return HTTPFound(location=request.application_url,
+                    headers=headers)
+        else:
+            return dict(message=errmsg)
     else:
         return dict()
+
+@view_config(route_name='logout')
+def logout(request):
+    headers = forget(request)
+    return HTTPFound(location=request.route_url('home'),
+            headers=headers)

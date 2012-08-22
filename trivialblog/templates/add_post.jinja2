@@ -1,79 +1,89 @@
 {% extends "basic.jinja2" %}
 {% block context %}
 {% if status %}
-<div class="alert alert-error">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  {{ status }}
+<div class="row">
+  <div class="alert alert-error span5">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ status }}
+  </div>
 </div>
 {% endif %}
 <form action="/new" method="post">
-  <input type="text" class="input-xlarge" name="headline" placeholder="Titel"><br/>
-  <textarea class="input-xxlarge" name="text" rows=15 columns=100 placeholder="Inhalt"></textarea><br/>
-  <button type="submit" class="btn btn-primary" name="form.submitted">Speichern</button>
+  <input type="text" class="input-xlarge" name="headline" placeholder="Titel" {{ "value=%s" % title if title }}><br/>
+  <textarea class="input-xxlarge" name="text" rows=15 columns=100 placeholder="Inhalt">{{ "%s" % text if text }}</textarea><br/>
+  <button type="submit" class="btn btn-primary" name="submitting">Speichern</button>
+  <button type="submit" class="btn" name="rendering">Vorschau</button>
 </form>
+{% if pdate %}
+  <hr>
+  <h2>{{ title }}</h2>
+  <p><small>{{ pdate.strftime("%A, %d. %B %Y") }}</small></p>
+  {{ text|markdown|safe }}
+  <hr>
+{% endif %}
 <div class="accordion" id="mdhelp">
   <div class="accordion-group">
     <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#mdhelp" href="#mdhelptable">Markdown Hilfe</a>
     </div>
     <div id="mdhelptable" class="accordion-body collapse">
-<table class="table span8">
-  <thead>
-    <tr>
-      <th>monkey type</th>
-      <th>monkey see</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>*kursiv*</td>
-      <td><em>kursiv</em></td>
-    </tr>
-    <tr>
-      <td>**fett**</td>
-      <td><strong>fett</strong></td>
-    </tr>
-    <tr>
-      <td>[link zu ta](http://trivialanalog.de)</td>
-      <td><a href="http://trivialanalog.de">link zu ta</a></td>
-    </tr>
-    <tr>
-      <td>
-        * item 1<br/>
-        * item 2<br/>
-        * item 3<br/>
-      </td>
-      <td>
-        <ul>
-          <li>item 1</li>
-          <li>item 2</li>
-          <li>item 3</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td>&gt; zitierter Text</td>
-      <td>
-        <blockquote>zitierter Text</blockquote>
-      </td>
-    </tr>
-    <tr>
-      <td>
-      <small>mit 4 Leerzeichen einrücken:</small><br/>
-      &nbsp;&nbsp;&nbsp;&nbsp;if spam == True:<br/>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print eggs
-      </td>
-      <td>
-        <pre>
-if spam == True:
-    print eggs</pre>
-      </td>
-    </tr>
-    <tr>
-      <td>benutze `print` um Dinge auszugeben</td>
-      <td>benutze <code>print</code> um Dinge auszugeben</td>
-  </tbody>
-</table>
+      <table class="table span8">
+        <thead>
+          <tr>
+            <th>monkey type</th>
+            <th>monkey see</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>*kursiv*</td>
+            <td><em>kursiv</em></td>
+          </tr>
+          <tr>
+            <td>**fett**</td>
+            <td><strong>fett</strong></td>
+          </tr>
+          <tr>
+            <td>[link zu ta](http://trivialanalog.de)</td>
+            <td><a href="http://trivialanalog.de">link zu ta</a></td>
+          </tr>
+          <tr>
+            <td>
+              * item 1<br/>
+              * item 2<br/>
+              * item 3<br/>
+            </td>
+            <td>
+              <ul>
+                <li>item 1</li>
+                <li>item 2</li>
+                <li>item 3</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td>&gt; zitierter Text</td>
+            <td>
+              <blockquote>zitierter Text</blockquote>
+            </td>
+          </tr>
+          <tr>
+            <td>
+            <small>mit 4 Leerzeichen einrücken:</small><br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;if spam == True:<br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print eggs
+            </td>
+            <td>
+              <pre>
+      if spam == True:
+          print eggs</pre>
+            </td>
+          </tr>
+          <tr>
+            <td>benutze `print` um Dinge auszugeben</td>
+            <td>benutze <code>print</code> um Dinge auszugeben</td>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

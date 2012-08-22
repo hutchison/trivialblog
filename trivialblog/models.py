@@ -28,3 +28,16 @@ class Post(Base):
         self.headline = h
         self.content = c
         self.pdate = d
+
+
+from pyramid.security import (
+        Allow,
+        Everyone,
+        )
+
+class RootFactory(object):
+    __acl__ = [(Allow, Everyone, 'view'),
+            (Allow, 'editors', 'edit'),
+            ]
+    def __init__(self, request):
+        pass

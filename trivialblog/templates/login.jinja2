@@ -1,0 +1,31 @@
+{% extends "basic.jinja2" %}
+
+{% block context %}
+{% if message %}
+<div class="row">
+  <div class="alert alert-error span5">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
+  </div>
+</div>
+{% endif %}
+<form action="/login" method="post" class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="inputName">Name</label>
+    <div class="controls">
+      <input type="text" id="inputName" name='login' placeholder="Name">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputPassword">Passwort</label>
+    <div class="controls">
+      <input type="password" id="inputPassword" name='password' placeholder="Password">
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn" name="submitting">Einloggen</button>
+    </div>
+  </div>
+</form>
+{% endblock %}
