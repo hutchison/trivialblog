@@ -1,10 +1,8 @@
 {% extends "basic.jinja2" %}
 {% block context %}
-  {% for p in posts %}
   <article>
-    <h2><a href="/p/{{ p.id }}">{{ p.headline }}</a></h2>
+    <h2>{{ p.headline }}</h2>
     <p><small>{{ p.pdate.strftime("%A, %d. %B %Y") }}</small></p>
     {{ p.content|markdown|safe }}
   </article>
-  {% endfor %}
 {% endblock %}
