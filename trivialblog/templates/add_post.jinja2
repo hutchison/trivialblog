@@ -8,7 +8,7 @@
   </div>
 </div>
 {% endif %}
-<form action="/new" method="post">
+<form action="{{ add_url }}" method="post">
   <input type="text" class="input-xlarge" name="headline" placeholder="Titel" {{ "value=%s" % title if title }}><br/>
   <textarea class="input-xxlarge" name="text" rows=15 columns=100 placeholder="Inhalt">{{ "%s" % text if text }}</textarea><br/>
   <button type="submit" class="btn btn-primary" name="submitting">Speichern</button>

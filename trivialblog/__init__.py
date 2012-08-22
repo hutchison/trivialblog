@@ -28,6 +28,6 @@ def main(global_config, **settings):
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')
     config.add_route('view_post', '/p/{id}')
-    config.add_route('add_post', '/new')
+    config.add_route('add_post', '/add')
     config.scan()
     return config.make_wsgi_app()

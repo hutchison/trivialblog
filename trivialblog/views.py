@@ -33,7 +33,11 @@ def home(request):
         Zeigt die letzten 10 Posts an."""
     posts = DBSession.query(Post).order_by(Post.pdate.desc()).limit(10)
     return dict(posts=posts,
-            logged_in=authenticated_userid(request)
+            logged_in=authenticated_userid(request),
+            login_url=request.route_url('login'),
+            logout_url=request.route_url('logout'),
+            add_url=request.route_url('add_post'),
+            view_url=request.route_url('view_post', id=''),
             )
 
 @view_config(route_name='view_post', renderer='view_post.jinja2',
@@ -47,7 +51,10 @@ def view_post(request):
             ' vorhanden.')
     else:
         return dict(p=post,
-                logged_in=authenticated_userid(request)
+                logged_in=authenticated_userid(request),
+                home_url=request.route_url('home'),
+                login_url=request.route_url('login'),
+                logout_url=request.route_url('logout'),
                 )
 
 @view_config(route_name='add_post', renderer='add_post.jinja2',
@@ -59,7 +66,9 @@ def add_post(request):
         text = request.params['text']
         if title == '' or text == '':
             errmsg = 'Titel oder Inhalt waren leer.'
-            return dict(status=errmsg)
+            return dict(status=errmsg,
+                    add_url=request.route_url('add_post'),
+                    )
         pdate = date.today()
         p = Post(title, text, pdate)
         DBSession.add(p)
@@ -68,9 +77,13 @@ def add_post(request):
         title = request.params['headline']
         text = request.params['text']
         pdate = date.today()
-        return dict(title=title, text=text, pdate=pdate)
+        return dict(title=title, text=text, pdate=pdate,
+                add_url=request.route_url('add_post'),
+                )
     else:
-        return dict(logged_in=authenticated_userid(request))
+        return dict(logged_in=authenticated_userid(request),
+                add_url=request.route_url('add_post'),
+                )
 
 @view_config(route_name='login', renderer='login.jinja2')
 def login(request):

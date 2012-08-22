@@ -3,22 +3,22 @@
 {% block navbarbuttons %}
 {% if logged_in %}
 <li class="divider-vertical"></li>
-<li><button class="btn btn-success btn-small" onclick="window.location.href='/new'"><i class="icon-pencil"></i> neuer Post</button></li>
+<li><button class="btn btn-success btn-small" onclick="window.location.href='{{ add_url }}'"><i class="icon-pencil"></i> neuer Post</button></li>
 {% endif %}
 {% endblock %}
 
 {% block loginbutton %}
 {% if logged_in %}
-<button class="btn btn-primary btn-small pull-right" onclick="window.location.href='/logout'"><i class="icon-user"></i> Logout</button>
+<a class="btn btn-primary btn-small pull-right" href="{{ logout_url }}"><i class="icon-user"></i> Logout</a>
 {% else %}
-<button class="btn btn-primary btn-small pull-right" onclick="window.location.href='/login'"><i class="icon-user"></i> Login</button>
+<a class="btn btn-primary btn-small pull-right" href="{{ login_url }}"><i class="icon-user"></i> Login</a>
 {% endif %}
 {% endblock %}
 
 {% block context %}
   {% for p in posts %}
   <article>
-    <h2><a href="/p/{{ p.id }}">{{ p.headline }}</a></h2>
+    <h2><a href="{{ view_url }}{{ p.id }}">{{ p.headline }}</a></h2>
     <p><small>{{ p.pdate.strftime("%A, %d. %B %Y") }}</small></p>
     {{ p.content|markdown|safe }}
   </article>
