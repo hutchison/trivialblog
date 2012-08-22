@@ -10,7 +10,7 @@ from .models import (
     Post,
     )
 
-@view_config(route_name='home', renderer='templates/basic.jinja2')
+@view_config(route_name='home', renderer='home.jinja2')
 def home(request):
-    posts = DBSession.query(Post).order_by(Post.pdate.desc()).all()
+    posts = DBSession.query(Post).order_by(Post.pdate.desc()).limit(10)
     return dict(posts=posts)
