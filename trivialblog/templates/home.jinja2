@@ -1,4 +1,10 @@
 {% extends "basic.jinja2" %}
+
+{% block navbarbuttons %}
+<li class="divider-vertical"></li>
+<li><button class="btn btn-success btn-small" onclick="window.location.href='/new'"><i class="icon-pencil"></i> neuer Post</button></li>
+{% endblock %}
+
 {% block context %}
   {% for p in posts %}
   <article>
