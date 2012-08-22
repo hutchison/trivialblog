@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-# FIXME: hier müssen wir die User aus der Datenbank ziehen
-USERS = {
-        'editor': 'editor',
-        'viewer': 'viewer',
-        }
 
-GROUPS = {
-        'editor': ['editors']
-        }
+from .models import (
+        DBSession,
+        User,
+        )
 
-def groupfinder(userid, request):
-    if userid in USERS:
-        return GROUPS.get(userid, [])
+def get_password_hash(userid):
+    pw_hash = DBSession.query(User.password).filter_by(name=userid).scalar()
+    return pw_hash
+
+def groupfinder(userid, request=''):
+    groups = DBSession.query(User.groups).filter_by(name=userid).scalar() or ''
+    return groups.split(',')

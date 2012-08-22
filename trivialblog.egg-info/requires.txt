@@ -7,3 +7,5 @@ zope.sqlalchemy
 waitress
 Markdown
 pyramid_jinja2
+passlib
+py-bcrypt

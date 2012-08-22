@@ -14,6 +14,7 @@ from ..models import (
     DBSession,
     Post,
     Base,
+    User,
     )
 
 def usage(argv):
@@ -31,3 +32,6 @@ def main(argv=sys.argv):
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
+    with transaction.manager:
+        admin = User('admin', 'admin', 'admins')
+        DBSession.add(admin)

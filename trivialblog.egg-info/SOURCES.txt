@@ -8,6 +8,7 @@ setup.py
 trivialblog/__init__.py
 trivialblog/jinja2_markdown_wrapper.py
 trivialblog/models.py
+trivialblog/security.py
 trivialblog/tests.py
 trivialblog/views.py
 trivialblog.egg-info/PKG-INFO
@@ -173,3 +174,4 @@ trivialblog/static/bootstrap/less/tests/css-tests.css
 trivialblog/static/bootstrap/less/tests/css-tests.html
 trivialblog/static/bootstrap/less/tests/forms.html
 trivialblog/static/bootstrap/less/tests/navbar.html
+trivialblog/static/css/custom.css

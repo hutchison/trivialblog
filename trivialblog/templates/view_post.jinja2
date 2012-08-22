@@ -1,10 +1,12 @@
 {% extends "basic.jinja2" %}
 
 {% block navbarbuttons %}
+{% if 'editors' in groups %}
 <li class="divider-vertical"></li>
 <li><button href="{{ home_url }}"class="btn btn-warning btn-small"><i class="icon-pencil"></i> editieren</button></li>
 <li class="divider-vertical"></li>
 <li><button class="btn btn-danger btn-small"><i class="icon-remove"></i> löschen</button></li>
+{% endif %}
 {% endblock %}
 
 {% block loginbutton %}

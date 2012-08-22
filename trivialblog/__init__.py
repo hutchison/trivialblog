@@ -4,6 +4,7 @@ from sqlalchemy import engine_from_config
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from .security import groupfinder
+from .secret import AUTH_SECRET
 
 from .models import DBSession
 
@@ -17,7 +18,7 @@ def main(global_config, **settings):
 
     config.include('pyramid_jinja2')
 
-    authn_policy = AuthTktAuthenticationPolicy('sosecret',
+    authn_policy = AuthTktAuthenticationPolicy(AUTH_SECRET,
         callback=groupfinder)
     authz_policy = ACLAuthorizationPolicy()
     config.set_authentication_policy(authn_policy)

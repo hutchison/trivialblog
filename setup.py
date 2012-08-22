@@ -16,6 +16,8 @@ requires = [
     'waitress',
     'Markdown',
     'pyramid_jinja2',
+    'passlib',
+    'py-bcrypt',
     ]
 
 setup(name='trivialblog',

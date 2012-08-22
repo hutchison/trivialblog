@@ -11,7 +11,7 @@ from pyramid.security import (
         forget,
         authenticated_userid,
         )
-from .security import USERS
+from .security import get_password_hash, groupfinder
 from markdown import markdown
 from sqlalchemy import desc
 
@@ -25,6 +25,7 @@ from pyramid.httpexceptions import (
 from .models import (
     DBSession,
     Post,
+    pwd_context,
     )
 
 @view_config(route_name='home', renderer='home.jinja2', permission='view')
@@ -32,7 +33,9 @@ def home(request):
     """Die Startseite.
         Zeigt die letzten 10 Posts an."""
     posts = DBSession.query(Post).order_by(Post.pdate.desc()).limit(10)
+    gr = groupfinder(authenticated_userid(request))
     return dict(posts=posts,
+            groups = gr,
             logged_in=authenticated_userid(request),
             login_url=request.route_url('login'),
             logout_url=request.route_url('logout'),
@@ -50,7 +53,9 @@ def view_post(request):
         return HTTPNotFound('Kein Blogpost mit der ID ' + str(postid) +
             ' vorhanden.')
     else:
+        gr = groupfinder(authenticated_userid(request))
         return dict(p=post,
+                groups = gr,
                 logged_in=authenticated_userid(request),
                 home_url=request.route_url('home'),
                 login_url=request.route_url('login'),
@@ -81,6 +86,7 @@ def add_post(request):
                 add_url=request.route_url('add_post'),
                 )
     else:
+        gr = groupfinder(authenticated_userid(request))
         return dict(logged_in=authenticated_userid(request),
                 add_url=request.route_url('add_post'),
                 )
@@ -91,7 +97,7 @@ def login(request):
         login = request.params.get('login', '')
         password = request.params.get('password', '')
         errmsg = u'Böser Login!'
-        if USERS.get(login) == password:
+        if pwd_context.verify(login, get_password_hash(login)):
             headers = remember(request, login)
             return HTTPFound(location=request.application_url,
                     headers=headers)
