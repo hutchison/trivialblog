@@ -3,3 +3,6 @@
 
 # Die Datenbanken (zumindest eine):
 *.db
+
+# Die Geheimniskrämerei:
+AUTH_SECRET
