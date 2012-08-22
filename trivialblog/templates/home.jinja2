@@ -8,7 +8,7 @@
 {% if 'admins' in groups %}
 <li class="divider-vertical"></li>
 <li>
-  <button class="btn btn-success btn-small" onclick="window.location.href='{{ add_url }}'">
+  <button class="btn btn-success btn-small" onclick="window.location.href='{{ add_user_url }}'">
     <i class="icon-plus"></i> <i class="icon-user"></i>
   </button>
 </li>
@@ -33,7 +33,7 @@
 {% block context %}
   {% for p in posts %}
   <article>
-    <h2><a href="{{ view_url }}{{ p.id }}">{{ p.headline }}</a></h2>
+    <h2><a href="{{ view_url }}{{ p.id }}">{{ p.headline|safe }}</a></h2>
     <p><small>{{ p.pdate.strftime("%A, %d. %B %Y") }}</small></p>
     {{ p.content|markdown|safe }}
   </article>

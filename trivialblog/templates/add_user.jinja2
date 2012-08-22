@@ -1,0 +1,54 @@
+{% extends "basic.jinja2" %}
+
+{% block navbarbuttons %}
+{% if 'editors' in groups %}
+<li class="divider-vertical"></li>
+<li><button class="btn btn-success btn-small" onclick="window.location.href='{{ add_url }}'"><i class="icon-pencil"></i> neuer Post</button></li>
+{% endif %}
+{% if 'admins' in groups %}
+<li class="divider-vertical"></li>
+<li>
+    <button type="submit" class="btn btn-small btn-warning">
+      <i class="icon-pencil"></i> <i class="icon-user"></i>
+    </button>
+  </form>
+</li>
+{% endif %}
+{% endblock %}
+
+{% block context %}
+{% if status %}
+<div class="row">
+  <div class="alert alert-{{ statustype }} span5">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ status }}
+  </div>
+</div>
+{% endif %}
+<form class="form-horizontal" action="{{ add_user_url }}" method="post">
+  <legend>neuen Benutzer anlegen</legend>
+  <div class="control-group">
+    <label class="control-label" for="inputUsername">Name</label>
+    <div class="controls">
+      <input type="text" id="inputUsername" name="username" placeholder="Benutzername" {{ "value=%s" % username if username }}><br/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputPassword">Passwort</label>
+    <div class="controls">
+      <input id="inputPassword" name="password" type="password" placeholder="Passwort"><br/>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="inputGroups">Gruppen</label>
+    <div class="controls">
+      <input type="text" id="inputGroups" name="groups" placeholder="Passwort"><br/>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-primary" name="submitting">Speichern</button>
+    </div>
+  </div>
+</form>
+{% endblock %}

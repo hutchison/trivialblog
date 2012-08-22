@@ -19,7 +19,7 @@
 
 {% block context %}
   <article>
-    <h2>{{ p.headline }}</h2>
+    <h2>{{ p.headline|safe }}</h2>
     <p><small>{{ p.pdate.strftime("%A, %d. %B %Y") }}</small></p>
     {{ p.content|markdown|safe }}
   </article>

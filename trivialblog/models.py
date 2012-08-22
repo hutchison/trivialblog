@@ -54,8 +54,8 @@ class User(Base):
 
 class RootFactory(object):
     __acl__ = [(Allow, Everyone, 'view'),
-            (Allow, 'editors', 'edit'),
-            (Allow, 'admins', 'edit_users'),
+            (Allow, 'editors', 'edit.posts'),
+            (Allow, 'admins', 'edit.users'),
             ]
     def __init__(self, request):
         pass

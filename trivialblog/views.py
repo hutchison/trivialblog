@@ -26,6 +26,7 @@ from .models import (
     DBSession,
     Post,
     pwd_context,
+    User,
     )
 
 @view_config(route_name='home', renderer='home.jinja2', permission='view')
@@ -39,11 +40,12 @@ def home(request):
             logged_in=authenticated_userid(request),
             login_url=request.route_url('login'),
             logout_url=request.route_url('logout'),
-            add_url=request.route_url('add_post'),
-            view_url=request.route_url('view_post', id=''),
+            add_url=request.route_url('add.post'),
+            view_url=request.route_url('view.post', id=''),
+            add_user_url=request.route_url('add.user'),
             )
 
-@view_config(route_name='view_post', renderer='view_post.jinja2',
+@view_config(route_name='view.post', renderer='view_post.jinja2',
     permission='view')
 def view_post(request):
     """Zeigt einen bestimmten Post an."""
@@ -62,9 +64,9 @@ def view_post(request):
                 logout_url=request.route_url('logout'),
                 )
 
-@view_config(route_name='add_post', renderer='add_post.jinja2',
-    permission='edit')
-@forbidden_view_config(renderer='login.jinja2')
+@view_config(route_name='add.post', renderer='add_post.jinja2',
+    permission='edit.posts')
+@forbidden_view_config(route_name='add.post', renderer='login.jinja2')
 def add_post(request):
     if 'submitting' in request.params:
         title = request.params['headline']
@@ -72,7 +74,7 @@ def add_post(request):
         if title == '' or text == '':
             errmsg = 'Titel oder Inhalt waren leer.'
             return dict(status=errmsg,
-                    add_url=request.route_url('add_post'),
+                    add_url=request.route_url('add.post'),
                     )
         pdate = date.today()
         p = Post(title, text, pdate)
@@ -83,12 +85,12 @@ def add_post(request):
         text = request.params['text']
         pdate = date.today()
         return dict(title=title, text=text, pdate=pdate,
-                add_url=request.route_url('add_post'),
+                add_url=request.route_url('add.post'),
                 )
     else:
         gr = groupfinder(authenticated_userid(request))
         return dict(logged_in=authenticated_userid(request),
-                add_url=request.route_url('add_post'),
+                add_url=request.route_url('add.post'),
                 )
 
 @view_config(route_name='login', renderer='login.jinja2')
@@ -96,12 +98,13 @@ def login(request):
     if 'submitting' in request.params:
         login = request.params.get('login', '')
         password = request.params.get('password', '')
-        errmsg = u'Böser Login!'
-        if pwd_context.verify(login, get_password_hash(login)):
+        pw_hash = get_password_hash(login)
+        if pw_hash and pwd_context.verify(password, pw_hash):
             headers = remember(request, login)
             return HTTPFound(location=request.application_url,
                     headers=headers)
         else:
+            errmsg = u'Böser Login!'
             return dict(message=errmsg)
     else:
         return dict()
@@ -111,3 +114,25 @@ def logout(request):
     headers = forget(request)
     return HTTPFound(location=request.route_url('home'),
             headers=headers)
+
+@view_config(route_name='add.user', renderer='add_user.jinja2',
+        permission='edit.users')
+@forbidden_view_config(route_name='add.user', renderer='login.jinja2')
+def add_user(request):
+    if 'submitting' in request.params:
+        user = request.params.get('username', '')
+        pw = request.params.get('password', '')
+        if user == '' or pw == '':
+            errmsg = 'Nutzer oder Passwort sind leer! Nix gemacht.'
+            return dict(status=errmsg, statustype='error')
+        else:
+            gr = request.params.get('groups', '')
+            u = User(user, pw, gr)
+            DBSession.add(u)
+            msg = unicode(user) + u' erfolgreich hinzugefügt.'
+            return dict(status=msg, statustype='success')
+    else:
+        gr = groupfinder(authenticated_userid(request))
+        return dict(logged_in=authenticated_userid(request),
+                groups=gr,
+                )
