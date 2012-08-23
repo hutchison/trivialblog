@@ -7,7 +7,8 @@ from .models import (
         )
 
 def get_auth_secret():
-    return DBSession.query(AuthSecret.secret).one().scalar()
+    s = DBSession.query(AuthSecret.secret).one()
+    return s.secret
 
 def get_password_hash(userid):
     pw_hash = DBSession.query(User.password).filter_by(name=userid).scalar()
