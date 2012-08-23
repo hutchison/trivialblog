@@ -12,9 +12,9 @@ from pyramid.paster import (
 
 from ..models import (
     DBSession,
-    Post,
     Base,
     User,
+    AuthSecret
     )
 
 def usage(argv):
@@ -35,3 +35,5 @@ def main(argv=sys.argv):
     with transaction.manager:
         admin = User('admin', 'admin', 'admins')
         DBSession.add(admin)
+        secret = AuthSecret()
+        DBSession.add(secret)

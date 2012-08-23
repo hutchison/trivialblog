@@ -3,6 +3,7 @@ from sqlalchemy import (
     Integer,
     Text,
     Date,
+    Binary,
     )
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -59,3 +60,11 @@ class RootFactory(object):
             ]
     def __init__(self, request):
         pass
+
+class AuthSecret(Base):
+    __tablename__ = 'auth_secret'
+    secret = Column(Binary, primary_key=True)
+
+    def __init__(self):
+        with open('/dev/urandom') as d:
+            self.secret = d.read(20)
