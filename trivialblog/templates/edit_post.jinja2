@@ -24,13 +24,21 @@
 >
   <input
     type="text"
-    class="input-xlarge"
+    class="span5"
     name="headline"
     placeholder="Titel"
     value="{{ ptitle if ptitle else post.headline }}"
+  >
+  <input
+    type="text"
+    class="input-small"
+    name="pdate"
+    placeholder="YYYY-MM-DD"
+    maxlength="10"
+    value="{{ pdate if pdate else post.pdate }}"
   ><br/>
   <textarea
-    class="input-xxlarge"
+    class="span9"
     name="content"
     rows=15
     columns=100

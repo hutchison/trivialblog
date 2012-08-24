@@ -20,6 +20,7 @@ from sqlalchemy import desc
 from sqlalchemy.orm.exc import NoResultFound
 
 from datetime import date
+import re
 
 from pyramid.httpexceptions import (
     HTTPFound,
@@ -97,10 +98,17 @@ def edit_post(request):
             groups=groupfinder(authenticated_userid(request)),
             logged_in=authenticated_userid(request),
             )
+    # Matcht das Datenformat, was wir brauchen:
+    datematcher = re.compile('^\d{4}-\d{2}-\d{2}$')
 
     if 'submitting' in request.params:
         newheadline = request.params['headline']
         newcontent = request.params['content']
+        if datematcher.match(request.params['pdate']):
+            d = map(int,request.params['pdate'].split('-'))
+            newdate = date(d[0], d[1], d[2])
+        else:
+            newdate = post.pdate
         if not newheadline and newcontent:
             msg = u'Titel oder Inhalt leer! Nix passiert.'
             ret.update(status=msg, statustype='error')
@@ -108,12 +116,17 @@ def edit_post(request):
         else:
             post.headline = newheadline
             post.content = newcontent
+            post.pdate = newdate
             return HTTPFound(location=request.route_url('view.post',
                 postid=postid))
     elif 'rendering' in request.params:
         rendheadline = request.params['headline']
         rendcontent = request.params['content']
-        renddate = date.today()
+        if datematcher.match(request.params['pdate']):
+            d = map(int,request.params['pdate'].split('-'))
+            renddate = date(d[0], d[1], d[2])
+        else:
+            renddate = post.pdate
         ret.update(ptitle=rendheadline,
                 pcontent=rendcontent,
                 pdate=renddate
