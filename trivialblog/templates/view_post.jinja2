@@ -1,20 +1,26 @@
 {% extends "basic.jinja2" %}
 
-{% block navbarbuttons %}
-{% if 'editors' in groups %}
-<li class="divider-vertical"></li>
-<li><button href="{{ home_url }}"class="btn btn-warning btn-small"><i class="icon-pencil"></i> editieren</button></li>
-<li class="divider-vertical"></li>
-<li><button class="btn btn-danger btn-small"><i class="icon-remove"></i> löschen</button></li>
-{% endif %}
-{% endblock %}
+{% from 'macros.jinja2' import 
+  btn_add_post,
+  btn_edit_post,
+  btn_delete_post,
+  btn_add_user,
+  btn_edit_user,
+%}
 
-{% block loginbutton %}
-{% if logged_in %}
-<a class="btn btn-primary btn-small pull-right" href="{{ logout_url }}"><i class="icon-user"></i> Logout</a>
-{% else %}
-<a class="btn btn-primary btn-small pull-right" href="{{ login_url }}"><i class="icon-user"></i> Login</a>
+{% block navbarbuttons %}
+
+{% if 'editors' in groups %}
+  {{ btn_add_post(request.route_url('add.post')) }}
+  {{ btn_edit_post(request.route_url('edit.post', id=p.id) ) }}
+  {{ btn_delete_post(request.route_url('delete.post', id=p.id)) }}
 {% endif %}
+
+{% if 'admins' in groups %}
+  {{ btn_add_user(request.route_url('add.user')) }}
+  {{ btn_edit_user(request.route_url('edit.user')) }}
+{% endif %}
+
 {% endblock %}
 
 {% block context %}

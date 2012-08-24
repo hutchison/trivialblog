@@ -29,6 +29,12 @@ def main(global_config, **settings):
     config.add_route('logout', '/logout')
     config.add_route('view.post', '/p/{id}')
     config.add_route('add.post', '/add.post')
+    config.add_route('edit.post', '/edit.post/{id}')
+    config.add_route('delete.post', '/delete.post/{id}')
     config.add_route('add.user', '/add.user')
+    config.add_route('edit.user', '/edit.user')
+    config.add_route('edit.user.details', '/edit.user/{userid}')
+    config.add_route('delete.user', '/delete.user/{userid}')
     config.scan()
+
     return config.make_wsgi_app()

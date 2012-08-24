@@ -6,14 +6,18 @@ from pyramid.view import (
         view_config,
         forbidden_view_config,
         )
+
 from pyramid.security import (
         remember,
         forget,
         authenticated_userid,
         )
 from .security import get_password_hash, groupfinder
+
 from markdown import markdown
+
 from sqlalchemy import desc
+from sqlalchemy.orm.exc import NoResultFound
 
 from datetime import date
 
@@ -34,15 +38,10 @@ def home(request):
     """Die Startseite.
         Zeigt die letzten 10 Posts an."""
     posts = DBSession.query(Post).order_by(Post.pdate.desc()).limit(10)
-    gr = groupfinder(authenticated_userid(request))
-    return dict(posts=posts,
-            groups = gr,
+    return dict(
+            posts=posts,
+            groups=groupfinder(authenticated_userid(request)),
             logged_in=authenticated_userid(request),
-            login_url=request.route_url('login'),
-            logout_url=request.route_url('logout'),
-            add_url=request.route_url('add.post'),
-            view_url=request.route_url('view.post', id=''),
-            add_user_url=request.route_url('add.user'),
             )
 
 @view_config(route_name='view.post', renderer='view_post.jinja2',
@@ -55,27 +54,26 @@ def view_post(request):
         return HTTPNotFound('Kein Blogpost mit der ID ' + str(postid) +
             ' vorhanden.')
     else:
-        gr = groupfinder(authenticated_userid(request))
         return dict(p=post,
-                groups = gr,
+                groups=groupfinder(authenticated_userid(request)),
                 logged_in=authenticated_userid(request),
-                home_url=request.route_url('home'),
-                login_url=request.route_url('login'),
-                logout_url=request.route_url('logout'),
                 )
 
 @view_config(route_name='add.post', renderer='add_post.jinja2',
     permission='edit.posts')
 @forbidden_view_config(route_name='add.post', renderer='login.jinja2')
 def add_post(request):
+    ret = dict(
+            groups=groupfinder(authenticated_userid(request)),
+            logged_in=authenticated_userid(request),
+            )
     if 'submitting' in request.params:
         title = request.params['headline']
         text = request.params['text']
         if title == '' or text == '':
             errmsg = 'Titel oder Inhalt waren leer.'
-            return dict(status=errmsg,
-                    add_url=request.route_url('add.post'),
-                    )
+            ret.update(status=errmsg, statustype='error')
+            return ret
         pdate = date.today()
         p = Post(title, text, pdate)
         DBSession.add(p)
@@ -84,14 +82,18 @@ def add_post(request):
         title = request.params['headline']
         text = request.params['text']
         pdate = date.today()
-        return dict(title=title, text=text, pdate=pdate,
-                add_url=request.route_url('add.post'),
-                )
+        ret.update(title=title, text=text, pdate=pdate)
+        return ret
     else:
-        gr = groupfinder(authenticated_userid(request))
-        return dict(logged_in=authenticated_userid(request),
-                add_url=request.route_url('add.post'),
-                )
+        return ret
+
+@view_config(route_name='edit.post')
+def edit_post(request):
+    return HTTPFound(location=request.route_url('home'))
+
+@view_config(route_name='delete.post')
+def delete_post(request):
+    return HTTPFound(location=request.route_url('home'))
 
 @view_config(route_name='login', renderer='login.jinja2')
 def login(request):
@@ -119,20 +121,93 @@ def logout(request):
         permission='edit.users')
 @forbidden_view_config(route_name='add.user', renderer='login.jinja2')
 def add_user(request):
+    ret = dict(
+            logged_in=authenticated_userid(request),
+            groups=groupfinder(authenticated_userid(request)),
+            )
     if 'submitting' in request.params:
         user = request.params.get('username', '')
         pw = request.params.get('password', '')
+        pwrpt = request.params.get('passwordrpt', '')
         if user == '' or pw == '':
-            errmsg = 'Nutzer oder Passwort sind leer! Nix gemacht.'
-            return dict(status=errmsg, statustype='error')
+            msg = 'Nutzer oder Passwort sind leer! Nix passiert.'
+            msgtype = 'error'
+        elif pw != pwrpt:
+            msg = u'Passwörter stimmen nicht überein. Nix passiert'
+            msgtype = 'error'
         else:
             gr = request.params.get('groups', '')
             u = User(user, pw, gr)
             DBSession.add(u)
             msg = unicode(user) + u' erfolgreich hinzugefügt.'
-            return dict(status=msg, statustype='success')
-    else:
-        gr = groupfinder(authenticated_userid(request))
-        return dict(logged_in=authenticated_userid(request),
-                groups=gr,
+            msgtype = 'success'
+        ret.update(status=msg, statustype=msgtype)
+    return ret
+
+@view_config(route_name='edit.user', renderer='edit_user.jinja2',
+        permission='edit.users')
+@forbidden_view_config(route_name='edit.user', renderer='login.jinja2')
+def edit_user(request):
+    ul = DBSession.query(User).all()
+    return dict(
+            users=ul,
+            groups=groupfinder(authenticated_userid(request)),
+            )
+
+@view_config(
+        route_name='edit.user.details', renderer='edit_user_details.jinja2',
+        permission='edit.users',
+        )
+@forbidden_view_config(route_name='edit.user.details', renderer='login.jinja2')
+def edit_user_details(request):
+    uid = request.matchdict.get('userid', '')
+    try:
+        u = DBSession.query(User).filter_by(name=uid).one()
+    except NoResultFound:
+        errmsg = unicode(uid) + u' nicht vorhanden!'
+        return dict(
+                user='',
+                status=errmsg,
+                statustype='error'
                 )
+    else:
+        if 'submitting' in request.params:
+            newname = request.params['username']
+            newpw = request.params['password']
+            newpwrpt = request.params['passwordrpt']
+            newgr = request.params['groups']
+            if newpw != '':
+                if newpw != newpwrpt:
+                    msg = u'Passwörter stimmen nicht überein! Keine Änderung.'
+                    return dict(
+                        user=u,
+                        status=msg,
+                        statustype='error',
+                        )
+                else:
+                    u = DBSession.merge(User(newname, newpw, newgr))
+                    msg = u'Alles geändert.'
+            else:
+                oldname = u.name
+                oldgroups = u.groups
+                u.name = newname
+                u.groups = newgr
+                msg = u"""<h4>Änderungen</h4>
+                Name von „%s“ nach „%s“<br/>
+                Gruppen von „%s“ nach „%s“""" % (oldname, u.name,
+                        oldgroups, u.groups)
+            return dict(
+                    user=u,
+                    status=msg,
+                    statustype='success',
+                    )
+        else:
+            return dict(
+                    user=u,
+                    groups=groupfinder(authenticated_userid(request)),
+                    )
+
+
+@view_config(route_name='delete.user')
+def delete_user(request):
+    return HTTPFound(location=request.route_url('home'))

@@ -1,0 +1,89 @@
+{% macro btn_add_post(target) %}
+<li class="divider-vertical"></li>
+<li>
+  <button
+    class="btn btn-success btn-small"
+    onclick="window.location.href='{{ target }}'"
+  >
+    <i class="icon-pencil"></i> neuer Post
+    </button>
+  </li>
+{% endmacro %}
+
+{% macro btn_add_user(target) %}
+<li class="divider-vertical"></li>
+<li>
+  <button
+    class="btn btn-success btn-small"
+    onclick="window.location.href='{{ target }}'"
+  >
+    <i class="icon-plus"></i>
+    <i class="icon-user"></i>
+  </button>
+</li>
+{% endmacro %}
+
+{% macro btn_edit_user(target) %}
+<li class="divider-vertical"></li>
+<li>
+  <button
+    type="submit"
+    class="btn btn-small btn-warning"
+    onclick="window.location.href='{{ target }}'"
+  >
+    <i class="icon-pencil"></i>
+    <i class="icon-user"></i>
+  </button>
+</li>
+{% endmacro %}
+
+{% macro btn_edit_post(target) %}
+<li class="divider-vertical"></li>
+<li>
+  <button
+    onclick="window.location.href='{{ target }}'"
+    class="btn btn-warning btn-small"
+  >
+    <i class="icon-pencil"></i> editieren
+  </button>
+</li>
+{% endmacro %}
+
+{% macro btn_delete_post(target) %}
+<li class="divider-vertical"></li>
+<li>
+  <button
+    onclick="window.location.href='{{ target }}'"
+    class="btn btn-danger btn-small"
+  >
+    <i class="icon-remove"></i> löschen
+  </button>
+</li>
+{% endmacro %}
+
+{% macro btn_login(target) %}
+<a
+  class="btn btn-primary btn-small pull-right"
+  href="{{ target }}"
+>
+  <i class="icon-user"></i> Login
+</a>
+{% endmacro %}
+
+{% macro btn_logout(target, username) %}
+<a 
+  class="btn btn-primary btn-small pull-right"
+  href="{{ target }}"
+>
+  {{ username }} <i class="icon-remove"></i>
+</a>
+{% endmacro %}
+
+{% macro status_alert(text, type) %}
+<div class="row">
+  <div class="alert alert-{{ type }} span5">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ text }}
+  </div>
+</div>
+{% endmacro %}

@@ -1,39 +1,40 @@
 {% extends "basic.jinja2" %}
 
+{% from 'macros.jinja2' import 
+  btn_add_post,
+  btn_add_user,
+  btn_edit_user,
+  btn_login,
+  btn_logout,
+%}
+
 {% block navbarbuttons %}
 {% if 'editors' in groups %}
-<li class="divider-vertical"></li>
-<li><button class="btn btn-success btn-small" onclick="window.location.href='{{ add_url }}'"><i class="icon-pencil"></i> neuer Post</button></li>
+  {{ btn_add_post(request.route_url('add.post')) }}
 {% endif %}
+
 {% if 'admins' in groups %}
-<li class="divider-vertical"></li>
-<li>
-  <button class="btn btn-success btn-small" onclick="window.location.href='{{ add_user_url }}'">
-    <i class="icon-plus"></i> <i class="icon-user"></i>
-  </button>
-</li>
-<li class="divider-vertical"></li>
-<li>
-    <button type="submit" class="btn btn-small btn-warning">
-      <i class="icon-pencil"></i> <i class="icon-user"></i>
-    </button>
-  </form>
-</li>
+  {{ btn_add_user(request.route_url('add.user')) }}
+  {{ btn_edit_user(request.route_url('edit.user')) }}
 {% endif %}
 {% endblock %}
 
 {% block loginbutton %}
 {% if logged_in %}
-<a class="btn btn-primary btn-small pull-right" href="{{ logout_url }}"><i class="icon-user"></i> Logout</a>
+  {{ btn_logout(request.route_url('logout'), logged_in) }}
 {% else %}
-<a class="btn btn-primary btn-small pull-right" href="{{ login_url }}"><i class="icon-user"></i> Login</a>
+  {{ btn_login(request.route_url('login')) }}
 {% endif %}
 {% endblock %}
 
 {% block context %}
   {% for p in posts %}
   <article>
-    <h2><a href="{{ view_url }}{{ p.id }}">{{ p.headline|safe }}</a></h2>
+    <h2>
+      <a href="{{ request.route_url('view.post', id=p.id) }}">
+        {{ p.headline|safe }}
+      </a>
+    </h2>
     <p><small>{{ p.pdate.strftime("%A, %d. %B %Y") }}</small></p>
     {{ p.content|markdown|safe }}
   </article>
