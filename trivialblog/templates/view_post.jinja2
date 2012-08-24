@@ -12,8 +12,8 @@
 
 {% if 'editors' in groups %}
   {{ btn_add_post(request.route_url('add.post')) }}
-  {{ btn_edit_post(request.route_url('edit.post', id=p.id) ) }}
-  {{ btn_delete_post(request.route_url('delete.post', id=p.id)) }}
+  {{ btn_edit_post(request.route_url('edit.post', postid=p.id) ) }}
+  {{ btn_delete_post(request.route_url('delete.post', postid=p.id)) }}
 {% endif %}
 
 {% if 'admins' in groups %}
