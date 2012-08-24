@@ -108,9 +108,8 @@ def edit_post(request):
         else:
             post.headline = newheadline
             post.content = newcontent
-            msg = u'Titel und Inhalt geändert.'
-            ret.update(status=msg, statustype='success')
-            return ret
+            return HTTPFound(location=request.route_url('view.post',
+                postid=postid))
     elif 'rendering' in request.params:
         rendheadline = request.params['headline']
         rendcontent = request.params['content']
