@@ -21,8 +21,8 @@ requires = [
     ]
 
 setup(name='trivialblog',
-      version='0.0',
-      description='trivialblog',
+      version='0.1',
+      description='Eine einfaches Blogsystem für Pyramid',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
         "Programming Language :: Python",
@@ -30,9 +30,9 @@ setup(name='trivialblog',
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
         ],
-      author='',
-      author_email='',
-      url='',
+      author='Martin Darmüntzel',
+      author_email='hutch@trivialanalog.de',
+      url='http://www.trivialanalog.de',
       keywords='web wsgi bfg pylons pyramid',
       packages=find_packages(),
       include_package_data=True,
