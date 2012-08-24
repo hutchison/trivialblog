@@ -1,0 +1,43 @@
+{% extends "basic.jinja2" %}
+
+{% from 'macros.jinja2' import 
+  btn_add_user,
+  btn_edit_user,
+  status_alert,
+%}
+
+{% block navbarbuttons %}
+{% if 'admins' in groups %}
+  {{ btn_add_user(request.route_url('add.user')) }}
+  {{ btn_edit_user(request.route_url('edit.user')) }}
+{% endif %}
+{% endblock %}
+
+{% block context %}
+{% if status %}
+  {{ status_alert(status|safe, statustype) }}
+{% endif %}
+
+<legend>Post wirklich löschen?</legend>
+  <form
+    action="{{ request.route_url('delete.post', postid=post.id) }}"
+    method="post"
+    class="form-inline"
+  >
+    <button
+      type="submit"
+      class="btn btn-danger"
+      name="submitting"
+    ><i class="icon-remove"></i> Löschen</button>
+    <a
+      class="btn"
+      href="{{ request.route_url('view.post', postid=post.id) }}"
+    >Doch nicht</a>
+  </form>
+<hr>
+<h2>{{ post.headline }}</h2>
+<p>
+    <small>{{ post.pdate.strftime("%A, %d. %B %Y") }}</small>
+</p>
+{{ post.content|markdown|safe }}
+{% endblock %}

@@ -127,9 +127,28 @@ def edit_post(request):
         else:
             return ret
 
-@view_config(route_name='delete.post')
+@view_config(route_name='delete.post', renderer='delete_post.jinja2',
+        permission='edit.posts')
+@forbidden_view_config(route_name='delete.post', renderer='login.jinja2')
 def delete_post(request):
-    return HTTPFound(location=request.route_url('home'))
+    postid = request.matchdict['postid']
+    post = DBSession.query(Post).filter_by(id=postid).first()
+    ret = dict(post=post,
+            groups=groupfinder(authenticated_userid(request)),
+            logged_in=authenticated_userid(request),
+            )
+    if 'submitting' in request.params:
+        DBSession.delete(post)
+        msg = u'Post ' + str(postid) + u' gelöscht'
+        ret.update(status=msg, statustype='success')
+        return ret
+    else:
+        if post is None:
+            return HTTPNotFound('Kein Blogpost mit der ID ' + str(postid) +
+                ' vorhanden.')
+        else:
+            return ret
+
 
 @view_config(route_name='login', renderer='login.jinja2')
 def login(request):
