@@ -48,7 +48,7 @@ def home(request):
     permission='view')
 def view_post(request):
     """Zeigt einen bestimmten Post an."""
-    postid = request.matchdict['id']
+    postid = request.matchdict['postid']
     post = DBSession.query(Post).filter_by(id=postid).first()
     if post is None:
         return HTTPNotFound('Kein Blogpost mit der ID ' + str(postid) +
@@ -87,9 +87,45 @@ def add_post(request):
     else:
         return ret
 
-@view_config(route_name='edit.post')
+@view_config(route_name='edit.post', renderer='edit_post.jinja2',
+        permission='edit.posts')
+@forbidden_view_config(route_name='edit.post', renderer='login.jinja2')
 def edit_post(request):
-    return HTTPFound(location=request.route_url('home'))
+    postid = request.matchdict['postid']
+    post = DBSession.query(Post).filter_by(id=postid).first()
+    ret = dict(post=post,
+            groups=groupfinder(authenticated_userid(request)),
+            logged_in=authenticated_userid(request),
+            )
+
+    if 'submitting' in request.params:
+        newheadline = request.params['headline']
+        newcontent = request.params['content']
+        if not newheadline and newcontent:
+            msg = u'Titel oder Inhalt leer! Nix passiert.'
+            ret.update(status=msg, statustype='error')
+            return ret
+        else:
+            post.headline = newheadline
+            post.content = newcontent
+            msg = u'Titel und Inhalt geändert.'
+            ret.update(status=msg, statustype='success')
+            return ret
+    elif 'rendering' in request.params:
+        rendheadline = request.params['headline']
+        rendcontent = request.params['content']
+        renddate = date.today()
+        ret.update(ptitle=rendheadline,
+                pcontent=rendcontent,
+                pdate=renddate
+                )
+        return ret
+    else:
+        if post is None:
+            return HTTPNotFound('Kein Blogpost mit der ID ' + str(postid) +
+                ' vorhanden.')
+        else:
+            return ret
 
 @view_config(route_name='delete.post')
 def delete_post(request):

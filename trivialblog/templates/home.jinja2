@@ -31,7 +31,7 @@
   {% for p in posts %}
   <article>
     <h2>
-      <a href="{{ request.route_url('view.post', id=p.id) }}">
+      <a href="{{ request.route_url('view.post', postid=p.id) }}">
         {{ p.headline|safe }}
       </a>
     </h2>
