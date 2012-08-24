@@ -1,10 +1,10 @@
 Metadata-Version: 1.1
 Name: trivialblog
-Version: 0.0
-Summary: trivialblog
-Home-page: UNKNOWN
-Author: UNKNOWN
-Author-email: UNKNOWN
+Version: 0.1
+Summary: Eine einfaches Blogsystem für Pyramid
+Home-page: http://www.trivialanalog.de
+Author: Martin Darmüntzel
+Author-email: hutch@trivialanalog.de
 License: UNKNOWN
 Description: trivialblog README
         ==================
@@ -22,10 +22,10 @@ Description: trivialblog README
         
         
         
-        0.0
+        0.1
         ---
         
-        -  Initial version
+        -  Erste funktionierende Version
         
 Keywords: web wsgi bfg pylons pyramid
 Platform: UNKNOWN

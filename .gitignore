@@ -4,5 +4,6 @@
 # Die Datenbanken (zumindest eine):
 *.db
 
-# Die Geheimniskrämerei:
-AUTH_SECRET
+# builds and dists:
+build/*
+dist/*

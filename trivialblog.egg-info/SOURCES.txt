@@ -175,3 +175,14 @@ trivialblog/static/bootstrap/less/tests/css-tests.html
 trivialblog/static/bootstrap/less/tests/forms.html
 trivialblog/static/bootstrap/less/tests/navbar.html
 trivialblog/static/css/custom.css
+trivialblog/templates/add_post.jinja2
+trivialblog/templates/add_user.jinja2
+trivialblog/templates/basic.jinja2
+trivialblog/templates/delete_post.jinja2
+trivialblog/templates/edit_post.jinja2
+trivialblog/templates/edit_user.jinja2
+trivialblog/templates/edit_user_details.jinja2
+trivialblog/templates/home.jinja2
+trivialblog/templates/login.jinja2
+trivialblog/templates/macros.jinja2
+trivialblog/templates/view_post.jinja2
