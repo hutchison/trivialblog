@@ -21,13 +21,13 @@
 <form action="{{ request.route_url('add.post') }}" method="post">
   <input
     type="text"
-    class="input-xlarge"
+    class="span5"
     name="headline"
     placeholder="Titel"
-    {{ "value=%s" % title if title }}
+    value="{{ title if title }}"
   ><br/>
   <textarea
-    class="input-xxlarge"
+    class="span9"
     name="text"
     rows=15
     columns=100

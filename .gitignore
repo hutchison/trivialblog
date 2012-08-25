@@ -10,3 +10,6 @@ dist/*
 
 # Logfiles:
 *.log
+
+# egg-info directory:
+trivialblog.egg-info/*
