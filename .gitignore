@@ -7,3 +7,6 @@
 # builds and dists:
 build/*
 dist/*
+
+# egg-info directory:
+trivialblog.egg-info/*
