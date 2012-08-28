@@ -28,7 +28,7 @@
 {% endblock %}
 
 {% block context %}
-  <dl class="dl-horizontal">
+  <dl>
   {% for p in posts %}
     <dt><small>{{ p.pdate.strftime("%d. %B %Y") }}</small></dt>
     <dd><a href="{{ request.route_url('view.post', postid=p.id) }}">{{ p.headline|safe }}</a></dd>
