@@ -161,6 +161,15 @@ def delete_post(request):
         else:
             return ret
 
+@view_config(route_name='archive', renderer='archive.jinja2')
+def archive(request):
+    posts = DBSession.query(Post).order_by(Post.pdate.desc()).all()
+    return dict(
+            posts=posts,
+            groups=groupfinder(authenticated_userid(request)),
+            logged_in=authenticated_userid(request),
+            )
+
 
 @view_config(route_name='login', renderer='login.jinja2')
 def login(request):

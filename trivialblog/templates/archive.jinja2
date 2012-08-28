@@ -1,0 +1,37 @@
+{% extends "basic.jinja2" %}
+
+{% from 'macros.jinja2' import 
+  btn_add_post,
+  btn_add_user,
+  btn_edit_user,
+  btn_login,
+  btn_logout,
+%}
+
+{% block navbarbuttons %}
+{% if 'editors' in groups %}
+  {{ btn_add_post(request.route_url('add.post')) }}
+{% endif %}
+
+{% if 'admins' in groups %}
+  {{ btn_add_user(request.route_url('add.user')) }}
+  {{ btn_edit_user(request.route_url('edit.user')) }}
+{% endif %}
+{% endblock %}
+
+{% block loginbutton %}
+{% if logged_in %}
+  {{ btn_logout(request.route_url('logout'), logged_in) }}
+{% else %}
+  {{ btn_login(request.route_url('login')) }}
+{% endif %}
+{% endblock %}
+
+{% block context %}
+  <dl class="dl-horizontal">
+  {% for p in posts %}
+    <dt><small>{{ p.pdate.strftime("%d. %B %Y") }}</small></dt>
+    <dd><a href="{{ request.route_url('view.post', postid=p.id) }}">{{ p.headline|safe }}</a></dd>
+  {% endfor %}
+  </dl>
+{% endblock %}
