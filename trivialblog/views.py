@@ -285,7 +285,8 @@ def edit_user_details(request):
                     )
 
 
-@view_config(route_name='delete.user', renderer='delete_user.jinja2')
+@view_config(route_name='delete.user', renderer='delete_user.jinja2',
+        permission='edit.users')
 def delete_user(request):
     userid = request.matchdict.get('userid', '')
     u = DBSession.query(User).filter_by(name=userid).first()
