@@ -38,7 +38,8 @@ from .models import (
 def home(request):
     """Die Startseite.
         Zeigt die letzten 10 Posts an."""
-    posts = DBSession.query(Post).order_by(Post.pdate.desc()).limit(10)
+    posts = DBSession.query(Post).order_by(Post.pdate.desc(),
+            Post.id.desc()).limit(10)
     return dict(
             posts=posts,
             groups=groupfinder(authenticated_userid(request)),
