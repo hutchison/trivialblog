@@ -285,6 +285,20 @@ def edit_user_details(request):
                     )
 
 
-@view_config(route_name='delete.user')
+@view_config(route_name='delete.user', renderer='delete_user.jinja2')
 def delete_user(request):
-    return HTTPFound(location=request.route_url('home'))
+    userid = request.matchdict.get('userid', '')
+    u = DBSession.query(User).filter_by(name=userid).first()
+    ret = dict(user=u,
+            logged_in=authenticated_userid(request),
+            groups=groupfinder(authenticated_userid(request)),
+            )
+    if u is None:
+        return HTTPNotFound(userid + ' existiert nicht.')
+    else:
+        if 'submitting' in request.params:
+            DBSession.delete(u)
+            msg = userid + u' erfolgreich gelöscht.'
+            msgtype = 'success'
+            ret.update(status=msg, statustype=msgtype)
+        return ret
